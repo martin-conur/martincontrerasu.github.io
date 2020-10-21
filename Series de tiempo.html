@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<!--
+	Strata by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<link rel="shortcut icon" href="favicon.ico">
+<html>
+	<head>
+		<title>Visualizador covid19</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="subpage">
+
+		<!-- Header -->
+			<header id="header" style="background-image:url('images/graph.jpg');">
+				<div class="inner">
+					<a href="index.html" class="image avatar"><img src="images/home2.png" alt="Home" /></a>
+					<h1><strong></strong><br />
+				</div>
+			</header>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- One -->
+					<section id="one">
+						<header class="major">
+							<h1>Data Visualization Covid19 en Chile</h1>
+						</header>
+						<h3 id="intro">Introducción y problema</h3>
+						<p>El estudio de algoritmos de detección y reconocimiento facial no es un campo nuevo, de hecho, la mayoría de las cámaras digitales
+							(incluso las antiguas) ya utilizan algoritmos de detección facial, sin necesariamente
+							utilizar deep learning, cómo por ejemplo
+							<a href="https://www.cs.cmu.edu/~efros/courses/LBMV07/Papers/viola-cvpr-01.pdf" target="_blank"> Haar Cascades (Viola y Jones 2001)</a>.
+						<p>El potencial uso de la detección y reconocimiento facial es gigantesto, desde autentenficación biométrica hasta conteo de población.
+							De hecho, cualquier uso que involucre personas y la imaginación del desarrollador. Sin embargo, hay que diferenciar entre "Reconocimiento" y "Detección".
+							El	primero involucra identificar a cada persona cómo individuo y debe ser tratado con cuidado, atendiendo a las regulaciones del país y ética
+							de los desarrolladores. Mientras que el segundo ("detección") consiste en clasificar una imagen cómo una cara o no (una clasificación binaria; lo que veremos en este post), sin asignar un id a la clase identificada.
+							La detección no es un éticamente complejo (a diferencia del reconocimiento facial) y no vulnera los derechos de cada persona. El fin de este post no es hablar
+							de filosofía del AI, así que no	alargaré este asunto.
+						 </p>
+						 <figure>
+					   		<img src="images/covid.gif" width="100%"</img>
+								<h6> <a href=https://www.cnet.com/news/in-china-facial-recognition-public-shaming-and-control-go-hand-in-hand/ target="_blank">Reconocimiento facial en China.</a></h6>
+						 </figure>
+						 <p>El 2020 ha sido un año muy particular, el coronavirus nos encontró desprevistos y cambió la forma en como nos relacionamos.
+							 Utilizar mascarillas era algo que sólo veíamos en las culturas orientales y ahora se ha convertido en algo indispensable que dificilmente
+							 dejará de estar en nuestros utencilios diarios. Si bien utilizar mascarilla es obligatorio, ¿Cuántas personas realmente usan mascarilla?
+							 Las veces que he salido a la calle la mayoría de la gente utiliza mascarilla, pero no son todos. Una forma "naive" de responder esta pregunta
+							 sería contar la gente que vemos y cuantificar la gente con y sin mascarilla. Sin embargo, este enfoque es bastante tedioso y sesgado, porque
+							 nos tomaría mucho tiempo y estaría limitado al lugar dónde me muevo y a las personas que veo.</p>
+						<p>Implementar un modelo de inteligencia artificial que detecte las personas con y sin mascarillas automáticamente podría ayudarnos a responder esta
+							pregunta. De hecho, este método ya se utiliza en <a href="https://slate.com/technology/2020/05/france-artificial-intelligence-mask-detection-coronavirus.html" target="_blank">
+							otros países</a>. A partir de esta metodología se puede obtener información importante acerca del comportamiento de la población respecto al
+							uso de mascarillas y ser un apoyo en la toma de decisiones por parte del gobierno local, aunque eso es harina de otro costal.</p>
+
+					 <h3 id="datos">Obtención de datos y preprocessing</h3>
+					 <p>Antes de buscar los datos, es necesario definir cómo atacaremos este problema y definir que modelo usaremos.
+
+					 <p> Para entrenar nuestro modelos necesitamos datos, muchos. En este caso necesitamos caras con y sin mascarilla. Idealmente, buscamos
+						 una población diversa para que nuestro modelo pueda generalizar bien ante los distintos casos. Esto implica buscar personas de distintas
+						 etnias, generos, tamaños, formas, etc. Si por ejemplo, entrenamos el modelo en personas asíaticas, no se desempeñaría bien en personas
+						 latinas o de color.</p>
+
+
+					</section>
+
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<ul class="icons">
+						<li><a href="https://twitter.com/RitmanDotpy" target="_blank" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="https://github.com/martincontrerasu" target="_blank" class="icon brands fa-github"><span class="label">Github</span></a></li>
+						<li><a href="https://www.linkedin.com/in/martincontrerasu/" class="icon brands fa-linkedin" target="_blank"><span class="label">Linkedin</span></a></li>
+						<li><a href="mailto:martincontrerasur@gmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Creado por Martín Contreras U.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.poptrox.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

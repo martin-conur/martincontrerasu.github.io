@@ -4,9 +4,10 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
+<link rel="shortcut icon" href="favicon.ico">
 <html>
 	<head>
-		<title>Martín Contreras Uribe</title>
+		<title>Martín Contreras Page</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -16,10 +17,14 @@
 		<!-- Header -->
 			<header id="header">
 				<div class="inner">
-					<a href="#" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
-					<h1><strong>Martín Contreras Uribe</strong><br /> 
+					<a href="https://www.linkedin.com/in/martincontrerasu/"target="_blank" class="image avatar"><img src="images/avataaars.png" alt="" /></a>
+					<h1><strong>Martín Contreras Uribe</strong><br />
 					Data Scientist,	geo-scientist <br />
 					y Deep Learning developer</h1>
+					<h3></h3>
+				  <h3><a href=#one>Portafolio</a></h3>
+					<h3><a href="#two">Sobre mi</a></h3>
+					<h3><strong><a href="MartinContreras_resume.pdf" download target="_blank">ver curriculum</a></strong></h3>
 				</div>
 			</header>
 
@@ -27,56 +32,56 @@
 			<div id="main">
 
 				<!-- One -->
-					<section id="one">
-						<header class="major">
-							<h2>Sobre mi</h2>
-						</header>
-						<p>Geólogo de formación, científico especializado en el trabajo de grandes cantidades datos mediante el uso de lenguajes de programación de alto nivel (Python) y librerias especializadas en data science (e.g. Pandas, matplotlib, plotly, dash, scikit-learn, numpy, tensorflow). Soy una persona creativa, de pensamiento matemático-estadístico, me gustan los desafíos y resolver problemas complejos que requieren de un enfoque diferente. Mis intereses actuales se centran en la implementación de modelos de Deep Learning para resolver problemas de la industria y la sociedad (ver portafolio).</p>
-						<p>Vivimos en una epoca muy interesante desde el punto de vista tecnológico, donde los datos son la nueva electricidad. En esta realidad llevada por los datos, contar con las herramientas necesarias para manipularlos, procesarlos y extraer conocimiento a partir de ellos, es fundamental (por no decir esencial). 
-						</p>
-						<p>La inteligencia artificial (AI) no es un campo nuevo, de hecho, uno de los primeros trabajos relacionados a redes neuronales artificiales fue el  <a href="https://en.wikipedia.org/wiki/Perceptron"target="_blank">"perceptrón"</a> postulado en 1958 por <a href="https://en.wikipedia.org/wiki/Frank_Rosenblatt" target="_blank">Rosenblatt</a>. Desde entonces, la AI ha pasado por varios periodos de "inviernos", donde el "hype" provocado por los medios, sumado a las falsas promesas por parte de los desarrolladores, escapan del real alcance del campo.  Actualmente estamos en uno de los periodos más importantes de la Inteligencia Artificial, ¿Volveremos a pasar por un invierno? Posiblemente, ¿Cúando? No se sabe, pero dificilmente pronto</p>
-						<p>A continuación te presento una serie de proyectos interesantes utilizando Deep Learning para resolver problemas reales. A medida que avanzamos en los proyectos, iré explicando conceptos básicos (y no tan básicos) con código incluido. Utilizaré python como lenguaje principal y tensorflow cómo librería de Deep Learning, ¿por qué? porque son el lenguaje y lebrería más utilizados en estos momentos, y por la facilidad de desplegar y escalar modelos con tensorflow, lo que lo hace una herramienta ideal para la industria. </p>
-					</section>
+				<section id="one">
+					<h1 id="portafolio">Proyectos relevantes</h1>
+					<div class="row">
+						<article class="col-6 col-12-xsmall work-item">
+							<a href="MaskRecognition.html"><img src="images/fulls/face.jpeg"  width=370 height=217 alt="" /></a>
+							<h3>Detección facial en tiempos de covid</h3>
+							<p>Aprende a crear un modelo de detección de objetos que determina si una persona tiene puesta una mascarilla o no.</p>
+						</article>
+						<article class="col-6 col-12-xsmall work-item">
+							<a href="covid.html"><img src="images/covid.gif" width=370 height=217 alt="" /></a>
+							<h3>Visualizador Coronavirus en Chile</h3>
+							<p>Usando los datos del ministerio de ciencias + dash </p>
+						</article>
+						<article class="col-6 col-12-xsmall work-item">
+							<a href="Series de tiempo.html"><img src="images/timeseries3.png" width=370 height=217 alt="" /></a>
+							<h3>Introducción a series de tiempo</h3>
+							<p>Desde una mirada clásica hasta deep learning</p>
+						</article>
+						<article class="col-6 col-12-xsmall work-item">
+							<a href="Clasificador de Fitoplancton.html" ><img src="images/fito.jpg" width=370 height=217 alt="" /></a>
+							<h3>Clasificador de Fitoplankton</h3>
+							<p>Utilizando Machine Learning para abordar una problemática mundial</p>
+						</article>
+						<article class="col-6 col-12-xsmall work-item">
+							<a href="Poeta Binario.html"><img src="images/poet.jpg" width=370 height=217 alt="" /></a>
+							<h3>Poeta Binario: Un twittero artificial</h3>
+							<p>Aprende las bases de NLP construyendo un poeta de 0s y 1s</p>
+						</article>
+						<article class="col-6 col-12-xsmall work-item">
+							<a href="kriging.html"><img src="images/map.jpg" width=370 height=217 alt="" /></a>
+							<h3>Geoestadística: Kriging en Python</h3>
+							<p>Utilizando la relación espacial de los datos</p>
+						</article>
+					</div>
+				</section>
 
 				<!-- Two -->
-					<section id="two">
-						<h2>Proyectos relevantes</h2>
-						<div class="row">
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/01.jpg" class="image fit thumb"><img src="images/thumbs/01.jpg" alt="" /></a>
-								<h3>Magna sed consequat tempus</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/02.jpg" class="image fit thumb"><img src="images/thumbs/02.jpg" alt="" /></a>
-								<h3>Ultricies lacinia interdum</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/03.jpg" class="image fit thumb"><img src="images/thumbs/03.jpg" alt="" /></a>
-								<h3>Tortor metus commodo</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/04.jpg" class="image fit thumb"><img src="images/thumbs/04.jpg" alt="" /></a>
-								<h3>Quam neque phasellus</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/05.jpg" class="image fit thumb"><img src="images/thumbs/05.jpg" alt="" /></a>
-								<h3>Nunc enim commodo aliquet</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/06.jpg" class="image fit thumb"><img src="images/thumbs/06.jpg" alt="" /></a>
-								<h3>Risus ornare lacinia</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
-							</article>
-						</div>
-						<ul class="actions">
-							<li><a href="#" class="button">Full Portfolio</a></li>
-						</ul>
-					</section>
+
+				<section id="two">
+					<header class="major">
+						<h2>Sobre mi</h2>
+					</header>
+					<p>Geólogo de formación, científico especializado en el trabajo de grandes cantidades datos mediante el uso de lenguajes de programación de alto nivel (Python) y librerias especializadas en data science (e.g. Pandas, matplotlib, plotly, dash, scikit-learn, numpy, tensorflow). Soy una persona creativa, de pensamiento matemático-estadístico, me gustan los desafíos y resolver problemas complejos que requieren de un enfoque diferente. Mis intereses actuales se centran en la implementación de modelos de Deep Learning para resolver problemas de la industria y la sociedad <a href="#portafolio">(ver portafolio)</a>.</p>
+					<p>Vivimos en una epoca muy interesante desde el punto de vista tecnológico, donde los datos son la nueva electricidad. En esta realidad llevada por los datos, contar con las herramientas necesarias para manipularlos, procesarlos y extraer conocimiento a partir de ellos, es fundamental (por no decir esencial).
+					</p>
+					<p>La inteligencia artificial (AI) no es un campo nuevo, de hecho, uno de los primeros trabajos relacionados a redes neuronales artificiales fue el  <a href="https://en.wikipedia.org/wiki/Perceptron"target="_blank">"perceptrón"</a> postulado en 1958 por <a href="https://en.wikipedia.org/wiki/Frank_Rosenblatt" target="_blank">Rosenblatt</a>. Desde entonces, la AI ha pasado por varios periodos de "inviernos", donde el "hype" provocado por los medios, sumado a las falsas promesas por parte de los desarrolladores, escapan del real alcance del campo.  Actualmente estamos en uno de los periodos más importantes de la Inteligencia Artificial, ¿Volveremos a pasar por un invierno? Posiblemente ¿Cúando? No se sabe, pero dificilmente pronto</p>
+
+			<!-- 		<p>A continuación te presento una serie de proyectos interesantes utilizando Machine Learning, Deep Learning o estadística clásica para resolver problemas reales. A medida que avanzamos en los proyectos, iré explicando conceptos básicos (y no tan básicos) con código incluido. Utilizaré python como lenguaje principal y tensorflow cómo librería de Deep Learning, ¿por qué? porque son el lenguaje y librería más utilizados en estos momentos, y por la facilidad de desplegar y escalar modelos con tensorflow, lo que lo hace una herramienta ideal para la industria. </p> -->
+				</section>
+
 
 
 				<!-- Three -->
@@ -445,7 +450,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 					<ul class="icons">
 						<li><a href="https://twitter.com/RitmanDotpy" target="_blank" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
 						<li><a href="https://github.com/martincontrerasu" target="_blank" class="icon brands fa-github"><span class="label">Github</span></a></li>
-						<li><a href="#" class="icon brands fa-linkedin" target="_blank"><span class="label">Linkedin</span></a></li>
+						<li><a href="https://www.linkedin.com/in/martincontrerasu/" class="icon brands fa-linkedin" target="_blank"><span class="label">Linkedin</span></a></li>
 						<li><a href="mailto:martincontrerasur@gmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
 					</ul>
 					<ul class="copyright">

@@ -1,0 +1,279 @@
+<!DOCTYPE HTML>
+<!--
+	Strata by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Mask Recognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="subpage">
+
+		<!-- Header -->
+			<header id="header" style="background-image:url('images/fulls/face_dark.png');">
+				<div class="inner">
+					<a href="index.html" class="image avatar"><img src="images/home2.png" alt="Home" /></a>
+					<h1><strong>Detección Facial + covid19</strong><br />
+						<ol>
+								<li><a href="#intro">Introducción y problema </a> <br /></li>
+								<li><a href="#datos">Obtención de los datos y preprocessing </a><br/></li>
+				  		 	<li><a href="#clasificador">Creando el clasificador</a><br/></li>
+				  			<li><a href="#modelo">Implementando el modelo </a><br/></li>
+				  			<li><a href="#conclusiones">Conclusiones y mejoras</a></h1></li>
+						</ol>
+				</div>
+			</header>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- One -->
+					<section id="one">
+						<header class="major">
+							<h1>Detección Facial en tiempos de covid19</h1>
+						</header>
+						<h3 id="intro">Introducción y problema</h3>
+						<p>El estudio de algoritmos de detección y reconocimiento facial no es un campo nuevo, de hecho, la mayoría de las cámaras digitales
+							(incluso las antiguas) ya utilizan algoritmos de detección facial, sin necesariamente
+							utilizar deep learning, cómo por ejemplo
+							<a href="https://www.cs.cmu.edu/~efros/courses/LBMV07/Papers/viola-cvpr-01.pdf" target="_blank"> Haar Cascades (Viola y Jones 2001)</a>.
+						<p>El potencial uso de la detección y reconocimiento facial es gigantesto, desde autentenficación biométrica hasta conteo de población.
+							De hecho, cualquier uso que involucre personas y la imaginación del desarrollador. Sin embargo, hay que diferenciar entre "Reconocimiento" y "Detección".
+							El	primero involucra identificar a cada persona cómo individuo y debe ser tratado con cuidado, atendiendo a las regulaciones del país y ética
+							de los desarrolladores. Mientras que el segundo ("detección") consiste en clasificar una imagen cómo una cara o no (una clasificación binaria; lo que veremos en este post), sin asignar un id a la clase identificada.
+							La detección no es un éticamente complejo (a diferencia del reconocimiento facial) y no vulnera los derechos de cada persona. El fin de este post no es hablar
+							de filosofía del AI, así que no	alargaré este asunto.
+						 </p>
+						 <figure>
+					   		<img src="https://cnet2.cbsistatic.com/img/iSBK519ynG9BFa_ySD550Anxrx8=/1092x0/2020/08/10/7160792a-58c7-4445-817b-fb35532e24ec/gettyimages-1063617532.jpg" width="40%" height="40%"></img>
+								<h6> <a href=https://www.cnet.com/news/in-china-facial-recognition-public-shaming-and-control-go-hand-in-hand/ target="_blank">Reconocimiento facial en China.</a></h6>
+						 </figure>
+						 <p>El 2020 ha sido un año muy particular, el coronavirus nos encontró desprovistos y cambió la forma en como nos relacionamos.
+							 Utilizar mascarillas era algo que sólo veíamos en las culturas orientales y ahora se ha convertido en algo indispensable que dificilmente
+							 dejará de estar en nuestros utencilios diarios. Si bien utilizar mascarilla es obligatorio, ¿Cuántas personas realmente usan mascarilla?
+							 Las veces que he salido a la calle la mayoría de la gente utiliza mascarilla, pero no son todos. Una forma "naive" de responder esta pregunta
+							 sería contar la gente que vemos y cuantificar la gente con y sin mascarilla. Sin embargo, este enfoque es bastante tedioso y sesgado, porque
+							 nos tomaría mucho tiempo y estaría limitado al lugar dónde me muevo y a las personas que veo.</p>
+						<p>Implementar un modelo de inteligencia artificial que detecte las personas con y sin mascarillas automáticamente podría ayudarnos a responder esta
+							pregunta. De hecho, este método ya se utiliza en <a href="https://slate.com/technology/2020/05/france-artificial-intelligence-mask-detection-coronavirus.html" target="_blank">
+							otros países</a>. A partir de esta metodología se puede obtener información importante acerca del comportamiento de la población respecto al
+							uso de mascarillas y ser un apoyo en la toma de decisiones por parte del gobierno local, aunque eso es harina de otro costal.</p>
+
+					 <h3 id="datos">Obtención de datos y preprocessing</h3>
+					 <p>Antes de buscar los datos, es necesario definir cómo atacaremos este problema y definir que modelo usaremos.
+
+					 <p> Hay muchas formas de abordar este problema. Lo que necesitamos es un modelo que nos entregue las coordenadas
+					 de las caras detectadas y la clasificación (con mascarilla o sin mascarilla). Podríamos crear una red neuronal de cero
+				 que nos entregue lo que necesitamos, utilizando arquitecturas reconocidas, cómo YOLOv3, SSD o Faster R-CNN, pero para ello
+			 	 necesitaríamos un dataset suficientemente grande (nunca es suficiente) de caras con y sin mascarillas, además de los
+			 "bounding box" (ubicación de las caras).</p>
+
+			 <p>Un "approach" más fácil y rápido sería utilizar un modelo ya entrenado en detección facial. Con este modelo detectaríamos
+				 los "bounding boxes" y podríamos extraer el objeto detectado (en este caso caras) y darselo a un simple clasificador binario (e.g. una
+				 red artificial convolucional CNN) que detecte si la cara entregada como input a este clasificador, corresponde a una cara con mascarilla o por el contrario
+				 a una cara sin mascarilla. Con este método nos ahorramos el trabajo de recopilar un gran dataset, sin embargo, no sería tan robusto para clasificar mascarillas,
+			 puesto está entrenado en un mundo sin covid y con menos mascarillas. En otras palabras estaría sesgado y podría fallar al detectar algunas caras muy ocultas por las mascarillas.</p>
+
+			 <p> A pesar de lo anterior, es un método económico y nos ayudará como línea base. <a href="https://github.com/martincontrerasu/face_ROI_extractor" target="_blank">Acá puedes acceder al
+				 repositorio que tiene el modelo para detectar caras y extraer las regiones de interés (ROI). </a> Con el script "main.py" podemos generar nuestro dataset en base a imágenes con mascarilla y
+				 sin mascarilla</p>
+
+			<h3 id="clasificador">Creando el clasificador</h3>
+			<p>Una vez obtenido el dataset mediante la extracción del ROI (sección anterior), nos queda crear un clasificador binario, que determine si la cara detectada tiene mascarilla o no.
+			El link al repositorio estará disponible pronto, aunque te invito a que construyas por tu cuenta el clasificador, las opciones son muchas. Puedes usar transfer learning con un
+			modelo entrenado en datasets gigantescos (e.g. Imagenet, COCO), congelar la base y reentrenar la cabeza del modelo (últimas capas y outputs).</p>
+			<h3 id="modelo">Implementando el modelo</h3>
+			<figure>
+			<img src=https://raw.githubusercontent.com/martincontrerasu/mask-detector/master/examples/02.gif width="60%"></img>
+		</figure>
+			<p>Hasta este punto ya tienes todo listo. Ya cuentas con un detector de caras y un clasificador de mascarillas. Sólo falta armar todo e implementarlo.
+				<a href="https://github.com/martincontrerasu/mask-detector" target="_blank">En este repositorio encontrarás todo armado, el archivo proncipal es fask.py:</a></p>
+				<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray"><pre style="margin: 0; line-height: 125%">
+				<span style="color: #DD4422">&quot;&quot;&quot;Fask is a face mask detector app in python with cv2 and tensorflow. Its a simple idea, for every frame in</span>
+				<span style="color: #DD4422">the video (webcam livestream) it detects faces and crops its detections, then it passes this cropped detections</span>
+				<span style="color: #DD4422">to another Neural Net that classify if the face is using a mask or not.</span>
+				<span style="color: #DD4422">    This two step aproach is simple to use, because is relatively easy to train the classifier (2nd NNet), but relies on</span>
+				<span style="color: #DD4422">    the detection of the first Neural Net, so if the first NN doesnt predict a face (and is actually a face) it will never</span>
+				<span style="color: #DD4422">    pass to the second.</span>
+				<span style="color: #DD4422">    The best solution is to build one FCNN that predict the faces and bounding box of faces with mask and without mask in one pass,</span>
+				<span style="color: #DD4422">    but this strategy requires a lot more data than a classifier.</span>
+				<span style="color: #DD4422">&quot;&quot;&quot;</span>
+				<span style="color: #888888">#libraries needed</span>
+				<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">cv2</span>
+				<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">numpy</span> <span style="color: #008800; font-weight: bold">as</span> <span style="color: #0e84b5; font-weight: bold">np</span>
+				<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">os</span>
+				<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">time</span>
+				<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">argparse</span>
+
+				<span style="color: #888888">#Deep learning libraries</span>
+				<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">tensorflow</span> <span style="color: #008800; font-weight: bold">as</span> <span style="color: #0e84b5; font-weight: bold">tf</span>
+
+				<span style="color: #888888">#command line arguments</span>
+				parser <span style="color: #333333">=</span> argparse<span style="color: #333333">.</span>ArgumentParser()
+				parser<span style="color: #333333">.</span>add_argument(<span style="background-color: #fff0f0">&quot;-i&quot;</span>, <span style="background-color: #fff0f0">&quot;--input&quot;</span>, default<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">0</span>, help<span style="color: #333333">=</span><span style="background-color: #fff0f0">&quot;path to video or webcam input int&quot;</span>)
+				parser<span style="color: #333333">.</span>add_argument(<span style="background-color: #fff0f0">&quot;-c&quot;</span>, <span style="background-color: #fff0f0">&quot;--conf&quot;</span>, default<span style="color: #333333">=</span><span style="color: #6600EE; font-weight: bold">0.5</span>, help<span style="color: #333333">=</span><span style="background-color: #fff0f0">&quot;confidence value for face detection&quot;</span>)
+				parser<span style="color: #333333">.</span>add_argument(<span style="background-color: #fff0f0">&quot;-s&quot;</span>, <span style="background-color: #fff0f0">&quot;--save&quot;</span>, default<span style="color: #333333">=</span><span style="color: #007020">False</span>, help<span style="color: #333333">=</span><span style="background-color: #fff0f0">&quot;Save frames in png pictures&quot;</span>)
+				args <span style="color: #333333">=</span> <span style="color: #007020">vars</span>(parser<span style="color: #333333">.</span>parse_args())
+
+				<span style="color: #888888">#setting the current directory (just if doesnt find the model files)</span>
+				<span style="color: #888888">#os.chdir(os.path.dirname(__file__))</span>
+
+				<span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">face_detection_and_mask_classifier</span>(frame, faceDetectionNet, maskClassifierNet):
+				    <span style="color: #DD4422">&quot;&quot;&quot;this function it receives every frame from a video straimng (frame var) and returns</span>
+				<span style="color: #DD4422">       the locations and predictions of the faces &quot;&quot;&quot;</span>
+
+
+				    <span style="color: #888888">#getting the height and width of the frame</span>
+				    (h, w) <span style="color: #333333">=</span> frame<span style="color: #333333">.</span>shape[:<span style="color: #0000DD; font-weight: bold">2</span>]
+				    <span style="color: #888888">#using cv2&#39;s blobFromImage to perform image transfomations required</span>
+				    <span style="color: #888888">#to make a prediction by the face detection net (res10_300x300_ssd_iter_140000)</span>
+				    blob <span style="color: #333333">=</span> cv2<span style="color: #333333">.</span>dnn<span style="color: #333333">.</span>blobFromImage(frame, <span style="color: #6600EE; font-weight: bold">1.0</span>, (<span style="color: #0000DD; font-weight: bold">300</span>,<span style="color: #0000DD; font-weight: bold">300</span>), (<span style="color: #6600EE; font-weight: bold">104.0</span>, <span style="color: #6600EE; font-weight: bold">177.0</span>, <span style="color: #6600EE; font-weight: bold">123.0</span>))
+
+				    <span style="color: #888888">#pass the transformed image (blob) to the ssd net and obtain the detections</span>
+				    faceDetectionNet<span style="color: #333333">.</span>setInput(blob)
+				    detections <span style="color: #333333">=</span> faceDetectionNet<span style="color: #333333">.</span>forward()
+
+				    <span style="color: #888888">#empy lists to store the predictions (faces, locations and predictions)</span>
+				    faces, locations, classifications <span style="color: #333333">=</span> [],[],[]
+
+				    <span style="color: #888888">#for every detection do the classification</span>
+				    <span style="color: #008800; font-weight: bold">for</span> i <span style="color: #000000; font-weight: bold">in</span> <span style="color: #007020">range</span>(<span style="color: #0000DD; font-weight: bold">0</span>, detections<span style="color: #333333">.</span>shape[<span style="color: #0000DD; font-weight: bold">2</span>]):
+				        <span style="color: #888888">#get the confidence of the prediction</span>
+				        confidence <span style="color: #333333">=</span> detections[<span style="color: #0000DD; font-weight: bold">0</span>, <span style="color: #0000DD; font-weight: bold">0</span>, i, <span style="color: #0000DD; font-weight: bold">2</span>] <span style="color: #888888">#depends on the Nets outputs</span>
+				        <span style="color: #888888">#if the confidence overpass the threshold value (conf argparse)</span>
+				        <span style="color: #008800; font-weight: bold">if</span> confidence <span style="color: #333333">&gt;</span>args[<span style="background-color: #fff0f0">&quot;conf&quot;</span>]:
+				            <span style="color: #888888">#get the bounding box coordinates (4 corners) and scales it to the img size</span>
+				            (x0, y0, x1, y1) <span style="color: #333333">=</span> (detections[<span style="color: #0000DD; font-weight: bold">0</span>, <span style="color: #0000DD; font-weight: bold">0</span>, i, <span style="color: #0000DD; font-weight: bold">3</span>:<span style="color: #0000DD; font-weight: bold">7</span>]<span style="color: #333333">*</span>np<span style="color: #333333">.</span>array([w, h, w, h]))<span style="color: #333333">.</span>astype(<span style="color: #007020">int</span>)
+
+				            <span style="color: #888888">#avoid to get a point outside the frame</span>
+				            <span style="color: #888888">#bottom left points sshould be greater than 0</span>
+				            (x0, y0) <span style="color: #333333">=</span> (<span style="color: #007020">max</span>(<span style="color: #0000DD; font-weight: bold">0</span>, x0), <span style="color: #007020">max</span>(<span style="color: #0000DD; font-weight: bold">0</span>, y0))
+				            <span style="color: #888888">#top right points should be less than 1</span>
+				            (x1, y1) <span style="color: #333333">=</span> (<span style="color: #007020">min</span>(w<span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">1</span>, x1), <span style="color: #007020">min</span>(h<span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">1</span>, y1))
+
+				            <span style="color: #888888">#with the bounding box coordinates extract the ROI</span>
+				            face <span style="color: #333333">=</span> frame[y0:y1, x0:x1]
+				            <span style="color: #888888">#from BGR to RGB (cv2 uses BGR and SSD uses RGB)</span>
+				            face <span style="color: #333333">=</span> cv2<span style="color: #333333">.</span>cvtColor(face, cv2<span style="color: #333333">.</span>COLOR_BGR2RGB)
+				            <span style="color: #888888">#resize to 224x224 (SSDs input)</span>
+				            face <span style="color: #333333">=</span> cv2<span style="color: #333333">.</span>resize(face, (<span style="color: #0000DD; font-weight: bold">224</span>, <span style="color: #0000DD; font-weight: bold">224</span>))
+				            <span style="color: #888888">#convert it to an array</span>
+				            face <span style="color: #333333">=</span> tf<span style="color: #333333">.</span>keras<span style="color: #333333">.</span>preprocessing<span style="color: #333333">.</span>image<span style="color: #333333">.</span>img_to_array(face)
+				            <span style="color: #888888">#preprocessing for mobilenet</span>
+				            face <span style="color: #333333">=</span> tf<span style="color: #333333">.</span>keras<span style="color: #333333">.</span>applications<span style="color: #333333">.</span>mobilenet_v2<span style="color: #333333">.</span>preprocess_input(face)
+
+				            <span style="color: #888888">#appending the face and boundig box to the lists</span>
+				            faces<span style="color: #333333">.</span>append(face)
+				            locations<span style="color: #333333">.</span>append((x0, y0, x1, y1))
+
+				    <span style="color: #888888">#if detect at least one face do the classification</span>
+				    <span style="color: #008800; font-weight: bold">if</span> <span style="color: #007020">len</span>(faces)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">0</span>:
+				        faces <span style="color: #333333">=</span> np<span style="color: #333333">.</span>array(faces, dtype<span style="color: #333333">=</span><span style="background-color: #fff0f0">&quot;float32&quot;</span>)
+				        classifications <span style="color: #333333">=</span> maskClassifierNet<span style="color: #333333">.</span>predict(faces, batch_size<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">16</span>)
+
+				    <span style="color: #888888">#return the face locations and the classification (with or without mask) as a tuple</span>
+				    <span style="color: #008800; font-weight: bold">return</span> (locations, classifications)
+
+				<span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;[INFO] Cargando modelos deep learning ...&quot;</span>)
+				<span style="color: #888888">#face detection model</span>
+				prototxtPath <span style="color: #333333">=</span> os<span style="color: #333333">.</span>path<span style="color: #333333">.</span>join(os<span style="color: #333333">.</span>getcwd(), <span style="background-color: #fff0f0">&quot;face_detector_model/deploy.prototxt&quot;</span>)
+				weightsPath <span style="color: #333333">=</span> os<span style="color: #333333">.</span>path<span style="color: #333333">.</span>join(os<span style="color: #333333">.</span>getcwd(), <span style="background-color: #fff0f0">&quot;face_detector_model/res10_300x300_ssd_iter_140000.caffemodel&quot;</span>)
+				faceDetectionNet <span style="color: #333333">=</span> cv2<span style="color: #333333">.</span>dnn<span style="color: #333333">.</span>readNet(prototxtPath, weightsPath)
+
+				<span style="color: #888888">#mask classifier model</span>
+				maskClassifierNet <span style="color: #333333">=</span> tf<span style="color: #333333">.</span>keras<span style="color: #333333">.</span>models<span style="color: #333333">.</span>load_model(<span style="background-color: #fff0f0">&quot;mask_classifier_mobilenet.model&quot;</span>)
+
+				<span style="color: #888888">#start camera livestream</span>
+				<span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;[INFO] Comenzando lectura de video ...&quot;</span>)
+				video <span style="color: #333333">=</span> cv2<span style="color: #333333">.</span>VideoCapture(args[<span style="background-color: #fff0f0">&quot;input&quot;</span>])
+				<span style="color: #888888">#check if there&#39;s Video</span>
+				<span style="color: #008800; font-weight: bold">if</span> <span style="color: #000000; font-weight: bold">not</span> video<span style="color: #333333">.</span>isOpened():
+				    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;(!)Error al abrir la cámara&quot;</span>)
+				    <span style="color: #007020">exit</span>(<span style="color: #0000DD; font-weight: bold">0</span>)
+
+				time<span style="color: #333333">.</span>sleep(<span style="color: #0000DD; font-weight: bold">2</span>)
+
+				<span style="color: #888888">#loop over every frame</span>
+				<span style="color: #008800; font-weight: bold">while</span> <span style="color: #007020">True</span>:
+				    ret, frame <span style="color: #333333">=</span> video<span style="color: #333333">.</span>read()
+				    <span style="color: #888888">#in this part it could be resized to assure a certain max shape</span>
+				    <span style="color: #888888">#i won&#39;t do that now</span>
+				    frame <span style="color: #333333">=</span> cv2<span style="color: #333333">.</span>resize(frame, (<span style="color: #0000DD; font-weight: bold">600</span>,<span style="color: #0000DD; font-weight: bold">400</span>))
+
+				    <span style="color: #888888">#call the function for detect faces and classify</span>
+				    (locations, classifications) <span style="color: #333333">=</span> face_detection_and_mask_classifier(frame, faceDetectionNet, maskClassifierNet)
+
+				    <span style="color: #888888">#for every face detected draw it bboxes and its class</span>
+				    <span style="color: #008800; font-weight: bold">for</span> (bbox, classification) <span style="color: #000000; font-weight: bold">in</span> <span style="color: #007020">zip</span>(locations, classifications):
+				        (x0, y0, x1, y1) <span style="color: #333333">=</span> bbox
+				        (mask, nomask) <span style="color: #333333">=</span> classification
+
+				        <span style="color: #888888">#define a label for mask and nomask, and colors</span>
+				        label <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;Con Mascarilla&quot;</span> <span style="color: #008800; font-weight: bold">if</span> mask<span style="color: #333333">&gt;</span>nomask <span style="color: #008800; font-weight: bold">else</span> <span style="background-color: #fff0f0">&quot;Sin Mascarilla&quot;</span>
+				        <span style="color: #888888">#red if nomask, green if mask</span>
+				        color <span style="color: #333333">=</span> (<span style="color: #0000DD; font-weight: bold">0</span>, <span style="color: #0000DD; font-weight: bold">255</span>, <span style="color: #0000DD; font-weight: bold">0</span>) <span style="color: #008800; font-weight: bold">if</span> label <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&quot;Con Mascarilla&quot;</span> <span style="color: #008800; font-weight: bold">else</span> (<span style="color: #0000DD; font-weight: bold">0</span>, <span style="color: #0000DD; font-weight: bold">0</span>, <span style="color: #0000DD; font-weight: bold">255</span>)
+
+				        <span style="color: #888888">#add in the label the probability that the class corresponds to mask or nomask</span>
+				        label <span style="color: #333333">=</span> f<span style="background-color: #fff0f0">&quot;{label}: {np.round(max(mask, nomask)*100, 2)}&quot;</span>
+
+				        <span style="color: #888888">#diplay bounding boxes and labels with an offset (10 px)</span>
+				        cv2<span style="color: #333333">.</span>putText(frame, label, (x0, y0<span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">10</span>), cv2<span style="color: #333333">.</span>FONT_HERSHEY_SIMPLEX, <span style="color: #6600EE; font-weight: bold">0.45</span>, color, <span style="color: #0000DD; font-weight: bold">2</span>)
+				        cv2<span style="color: #333333">.</span>rectangle(frame, (x0, y0), (x1,y1), color, <span style="color: #0000DD; font-weight: bold">2</span>)
+
+				        <span style="color: #888888">#optional --&gt; save image</span>
+				        <span style="color: #008800; font-weight: bold">if</span> args[<span style="background-color: #fff0f0">&quot;save&quot;</span>]:
+				            cv2<span style="color: #333333">.</span>imwrite(f<span style="background-color: #fff0f0">&quot;frames/{time.time()}.png&quot;</span>, frame)
+
+				    <span style="color: #888888">#plot the frame</span>
+				    cv2<span style="color: #333333">.</span>imshow(<span style="background-color: #fff0f0">&quot;Detector de mascarilla&quot;</span>, frame)
+				    key <span style="color: #333333">=</span> cv2<span style="color: #333333">.</span>waitKey(<span style="color: #0000DD; font-weight: bold">1</span>) <span style="color: #333333">&amp;</span> <span style="color: #005588; font-weight: bold">0xFF</span>
+
+				    <span style="color: #888888">#break the videostream if &quot;q&quot; is pressed</span>
+				    <span style="color: #008800; font-weight: bold">if</span> key <span style="color: #333333">==</span> <span style="color: #007020">ord</span>(<span style="background-color: #fff0f0">&quot;q&quot;</span>):
+				        <span style="color: #008800; font-weight: bold">break</span>
+				<span style="color: #888888">#finish up</span>
+				cv2<span style="color: #333333">.</span>destroyAllWindows()
+				video<span style="color: #333333">.</span>stop()
+				</pre></div>
+					<h3 id="conclusiones">Conclusiones y mejoras</h3>
+					<p>Con esta implementación puedes obtener buenos resultados para detectar caras con y sin mascarillas, pero cómo mencioné al principio, está sesgado puesto el detector está entrenado en
+						caras sin mascarillas (o con pocas caras con mascarillas) y falla cuando ciertas mascarillas cubren gran parte de la cara. Para ello crear un detector desde cero, entrenado en caras
+						con mascarillas, sería una mejor (aunque más cara) solución. Otro aspecto a discutir, es definir algo tan básico cómo <strong>¿Qué consideramos cómo mascarilla?</strong> Sí, puede sonar
+						absurdo, pero es de gran relevancia considerar esta pregunta. Una tela en la boca/nariz es una mascarilla? Una pañoleta? Una mascarilla hecha a mano con generos se considera una mascarilla?
+						Esto es importante para implementar un modelo que debe detectar mascarillas (o cualquier otro objeto).</p>
+					<p>Espero que hayas aprendido y disfrutado en armar este proyecto, tanto cómo yo lo hice, si tienes preguntas, no dudes en hacermelas llegar. Saludos!</p>
+					</section>
+
+
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<ul class="icons">
+						<li><a href="https://twitter.com/RitmanDotpy" target="_blank" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="https://github.com/martincontrerasu" target="_blank" class="icon brands fa-github"><span class="label">Github</span></a></li>
+						<li><a href="https://www.linkedin.com/in/martincontrerasu/" class="icon brands fa-linkedin" target="_blank"><span class="label">Linkedin</span></a></li>
+						<li><a href="mailto:martincontrerasur@gmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Creado por Martín Contreras U.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.poptrox.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
